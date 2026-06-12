@@ -1,10 +1,11 @@
 from app.rag.retriever import get_retriever
-from app.agents.research_agent import research_agent
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 load_dotenv()
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
+    model="gemini-2.0-flash",
     temperature=0
 )
 
@@ -29,4 +30,22 @@ def research_agent(query, context):
 
     response = llm.invoke(prompt)
 
+    return response.content
+
+USE_MOCK = True
+
+def research_agent(query, context):
+
+    if USE_MOCK:
+        return f"Mock answer for: {query}"
+
+    prompt = f"""
+    Context:
+    {context}
+
+    Question:
+    {query}
+    """
+
+    response = llm.invoke(prompt)
     return response.content
